@@ -1,0 +1,571 @@
+:root {
+    /* Light Mode Colors */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-shadow: rgba(0, 0, 0, 0.1);
+    --primary-color: #007AFF;
+    --success-color: #34C759;
+    --warning-color: #FF9500;
+    --danger-color: #FF3B30;
+    --text-primary: #1D1D1F;
+    --text-secondary: #86868B;
+    --input-bg: rgba(255, 255, 255, 0.9);
+    --input-border: rgba(0, 122, 255, 0.2);
+    --input-focus-border: #007AFF;
+    --input-focus-shadow: rgba(0, 122, 255, 0.2);
+    --hover-bg: rgba(242, 242, 247, 0.8);
+    --body-gradient-start: #F5F5F7;
+    --body-gradient-end: #E8E8ED;
+    --button-gradient-start: #5E97F6;
+    --button-gradient-end: #4A7FE3;
+    --button-hover-start: #4A7FE3;
+    --button-hover-end: #3A6FD0;
+}
+
+[data-theme="dark"] {
+    --glass-bg: rgba(28, 28, 30, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+    --primary-color: #0A84FF;
+    --success-color: #30D158;
+    --warning-color: #FF9F0A;
+    --danger-color: #FF453A;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A1A1A6;
+    --input-bg: rgba(44, 44, 46, 0.9);
+    --input-border: rgba(10, 132, 255, 0.2);
+    --input-focus-border: #0A84FF;
+    --input-focus-shadow: rgba(10, 132, 255, 0.2);
+    --hover-bg: rgba(58, 58, 60, 0.8);
+    --body-gradient-start: #1C1C1E;
+    --body-gradient-end: #2C2C2E;
+    --button-gradient-start: #4A7FE3;
+    --button-gradient-end: #3A6FD0;
+    --button-hover-start: #3A6FD0;
+    --button-hover-end: #2A5FC0;
+}
+
+/* 主題切換按鈕 */
+.theme-switch-wrapper {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.theme-switch {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: none;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 4px 12px var(--glass-shadow);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.theme-switch:hover {
+    transform: scale(1.1);
+    background: var(--hover-bg);
+}
+
+.theme-switch-icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+[data-theme="dark"] .theme-switch-icon {
+    transform: rotate(180deg);
+}
+
+/* 基礎設定 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--body-gradient-start) 0%, var(--body-gradient-end) 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    line-height: 1.5;
+    transition: background 0.3s ease;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+h1 {
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    letter-spacing: -0.5px;
+}
+
+.section {
+    margin-bottom: 30px;
+    padding: clamp(15px, 3vw, 25px);
+    border-radius: 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px var(--glass-shadow);
+    transition: all 0.3s ease;
+}
+
+.section-title {
+    font-size: clamp(1.2rem, 3vw, 1.4rem);
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: var(--text-primary);
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--input-border);
+    letter-spacing: 0.5px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: clamp(0.9rem, 2vw, 0.95rem);
+    letter-spacing: 0.3px;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--input-border);
+    border-radius: 12px;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.form-group input[type="text"]:hover,
+.form-group textarea:hover {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
+    background: var(--input-bg);
+}
+
+.form-group textarea {
+    min-height: 120px;
+    font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.form-group input[type="text"]::placeholder,
+.form-group textarea::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.btn-calculate {
+    background: linear-gradient(135deg, var(--success-color), #2FB350);
+    color: #FFFFFF;
+    padding: clamp(12px, 2vw, 14px) clamp(20px, 4vw, 28px);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: clamp(1rem, 2vw, 1.1rem);
+    font-weight: 500;
+    display: block;
+    margin: 30px auto;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(48, 209, 88, 0.2);
+    width: clamp(200px, 80%, 300px);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-calculate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-calculate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(48, 209, 88, 0.3);
+    background: linear-gradient(135deg, #2FB350, #2A9D45);
+}
+
+.btn-calculate:hover::before {
+    opacity: 1;
+}
+
+.btn-calculate:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(48, 209, 88, 0.2);
+}
+
+/* 金鑰產生按鈕容器 */
+.key-generator-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+/* 金鑰產生按鈕樣式 */
+.btn-generate {
+    background: linear-gradient(135deg, var(--button-gradient-start), var(--button-gradient-end));
+    color: #FFFFFF;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    opacity: 0.9;
+}
+
+.btn-generate::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-generate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, var(--button-hover-start), var(--button-hover-end));
+    opacity: 1;
+}
+
+.btn-generate:hover::before {
+    opacity: 1;
+}
+
+.btn-generate:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+    opacity: 0.9;
+}
+
+.btn-generate:hover .btn-icon {
+    transform: scale(1.1);
+    opacity: 1;
+}
+
+.btn-text {
+    white-space: nowrap;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    opacity: 0.9;
+}
+
+.btn-generate:hover .btn-text {
+    opacity: 1;
+}
+
+/* 響應式設計調整 */
+@media screen and (max-width: 768px) {
+    .key-generator-buttons {
+        grid-template-columns: 1fr;
+    }
+    
+    .btn-generate {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+}
+
+.warning-text {
+    color: var(--danger-color);
+    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    margin-top: 8px;
+    font-style: italic;
+    opacity: 0.9;
+    padding-left: 5px;
+    border-left: 3px solid var(--danger-color);
+}
+
+.result-section {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-top: 25px;
+}
+
+/* JSON 顯示區域樣式 */
+.json-display-container {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.json-display-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.json-display-title {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.json-display-description {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
+
+.json-display {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 12px;
+    font-family: monospace;
+    white-space: pre-wrap;
+    word-break: break-all;
+    min-height: 60px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* QR Code 容器樣式 */
+.qrcode-container {
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+}
+
+.qrcode-display {
+    width: 100%;
+    padding: clamp(15px, 3vw, 20px);
+    background: var(--input-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qrcode-display img {
+    max-width: min(200px, 80%);
+    margin: 0 auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--glass-shadow);
+}
+
+/* 自定義滾動條 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--input-bg);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* 響應式設計 */
+@media screen and (min-width: 768px) {
+    .result-section {
+        flex-direction: row;
+    }
+
+    .json-display,
+    .qrcode-display {
+        flex: 1;
+    }
+
+    .btn-generate {
+        width: auto;
+    }
+}
+
+/* 手機版優化 */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    .section {
+        padding: 15px;
+    }
+
+    .btn-calculate,
+    .btn-generate {
+        width: 100%;
+    }
+
+    .theme-switch-wrapper {
+        top: 10px;
+        right: 10px;
+    }
+
+    .theme-switch {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* 平板版優化 */
+@media screen and (min-width: 481px) and (max-width: 767px) {
+    .container {
+        padding: 15px;
+    }
+}
+
+.message {
+    text-align: center;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* 通知訊息樣式 */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    max-width: 400px;
+}
+
+.notification.show {
+    transform: translateX(0);
+}
+
+.notification.success {
+    border-left: 4px solid #4CAF50;
+}
+
+.notification.error {
+    border-left: 4px solid #f44336;
+}
+
+.notification-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.notification-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.notification-message {
+    flex: 1;
+}
+
+.notification-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+}
+
+.notification-text {
+    color: var(--text-primary);
+    opacity: 0.9;
+    font-size: 0.95em;
+}
+
+/* 深色模式下的通知樣式 */
+@media (prefers-color-scheme: dark) {
+    .notification {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* 按鈕載入中狀態 */
+.btn-generate:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+} 

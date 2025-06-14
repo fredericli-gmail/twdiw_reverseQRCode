@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code 反掃測試</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsencrypt/3.2.1/jsencrypt.min.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/github-banner.css">
+</head>
+<body>
+    <!-- GitHub 專案連結區塊 -->
+    <div class="github-banner">
+        <a href="https://github.com/fredericli-gmail/twdiw_reverseQRCode" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-github github-icon"></i>
+            <span>在 GitHub 上查看原始碼</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- 主題切換按鈕 -->
+        <div class="theme-switch-wrapper">
+            <button class="theme-switch" onclick="toggleTheme()">
+                <span class="theme-switch-icon">🌙</span>
+            </button>
+        </div>
+
+        <h1>QR Code 反掃測試</h1>
+
+        <!-- 管理員設定區塊 -->
+        <section class="section">
+            <h2 class="section-title">管理員設定</h2>
+            <div class="key-generator-buttons">
+                <button class="btn-generate">
+                    <span class="btn-icon">🔑</span>
+                    <span class="btn-text">RSA2048 公私鑰自動產生</span>
+                </button>
+                <button class="btn-generate">
+                    <span class="btn-icon">⏱️</span>
+                    <span class="btn-text">TOTP 金鑰產生</span>
+                </button>
+                <button class="btn-generate">
+                    <span class="btn-icon">🔐</span>
+                    <span class="btn-text">HMAC 金鑰產生</span>
+                </button>
+            </div>
+            <div class="form-group">
+                <label for="rsa-public-key">RSA 公鑰</label>
+                <textarea id="rsa-public-key"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="rsa-private-key">RSA 私鑰</label>
+                <textarea id="rsa-private-key"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="totp-key">TOTP 金鑰(採用HMAC-SHA256演算法，時間有效性60秒，時間偏移量30秒)</label>
+                <input type="text" id="totp-key">
+            </div>
+            <div class="form-group">
+                <label for="hmac-key">HMAC 金鑰(採用HMAC-SHA256演算法，金鑰長度256位元)</label>
+                <input type="text" id="hmac-key">
+            </div>
+        </section>
+
+        <!-- 領貨人資料模擬區 -->
+        <section class="section">
+            <h2 class="section-title">領貨人資料模擬區</h2>
+            <div class="form-group">
+                <label for="phone">手機號碼</label>
+                <input type="text" id="phone" placeholder="請輸入 3 位數或 10 位數手機號碼">
+            </div>
+            <div class="form-group">
+                <label for="name">姓名</label>
+                <input type="text" id="name" placeholder="請輸入姓名">
+            </div>
+            <button id="generate-pickup-person-btn" class="btn-calculate">
+                <span class="btn-icon">👤</span>
+                <span class="btn-text">產生要給超商的資料</span>
+            </button>
+        </section>
+
+        <!-- 後端計算結果顯示區塊 -->
+        <section class="section">
+            <h2 class="section-title">後端計算結果顯示</h2>
+            <div class="result-area">
+                <h3>後端計算結果</h3>
+                <div class="form-group">
+                    <label>明碼 JSON 資料：</label>
+                    <div class="json-display-container">
+                        <div class="json-display-header">
+                            <span class="json-display-title">原始資料</span>
+                            <span class="json-display-description">包含電話號碼、姓名、TOTP 和 HMAC 值的明碼資料</span>
+                        </div>
+                        <div id="json-display" class="json-display"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>加密後 JSON 資料：</label>
+                    <div class="json-display-container">
+                        <div class="json-display-header">
+                            <span class="json-display-title">加密資料</span>
+                            <span class="json-display-description">使用 RSA 公鑰加密後的資料</span>
+                        </div>
+                        <div id="json-display-encrypt" class="json-display"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>QR Code：</label>
+                    <div id="qrcode" class="qrcode-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 驗證區塊 -->
+        <section class="section">
+            <h2 class="section-title">QR Code 驗證區</h2>
+            <div class="validation-area">
+                <div class="form-group">
+                    <label for="qr-code-input">QR Code 內容：</label>
+                    <textarea id="qr-code-input" class="form-control" placeholder="請輸入或貼上 QR Code 的內容"></textarea>
+                </div>
+                <button id="verify-qr-code-btn" class="btn-calculate">
+                    <span class="btn-icon">🔍</span>
+                    <span class="btn-text">驗證 QR Code</span>
+                </button>
+                <div class="validation-result">
+                    <h3>驗證結果</h3>
+                    <div class="form-group">
+                        <label>解密後的資料：</label>
+                        <div class="json-display-container">
+                            <div class="json-display-header">
+                                <span class="json-display-title">解密資料</span>
+                                <span class="json-display-description">使用 RSA 私鑰解密後的資料</span>
+                            </div>
+                            <div id="decrypted-data" class="json-display"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>驗證狀態：</label>
+                        <div id="validation-status" class="validation-status">
+                            <div class="status-icon">⏳</div>
+                            <div class="status-text">等待驗證</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript 檔案 -->
+    <script src="./js/home.js"></script>
+    <script src="./js/admin-settings.js"></script>
+    <script src="./js/pickup-person.js"></script>
+    <script src="./js/backend-result.js"></script>
+    <script src="./js/verify-qrcode.js"></script>
+</body>
+</html> 

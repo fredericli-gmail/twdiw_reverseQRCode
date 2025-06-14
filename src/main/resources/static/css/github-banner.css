@@ -1,0 +1,36 @@
+.github-banner {
+    background-color: #24292e;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.github-banner a {
+    color: white;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.github-banner a:hover {
+    color: #58a6ff;
+}
+
+.github-icon {
+    font-size: 20px;
+}
+
+/* 深色主題支援 */
+[data-theme="dark"] .github-banner {
+    background-color: #1b1f23;
+}
+
+[data-theme="dark"] .github-banner a:hover {
+    color: #79b8ff;
+} 

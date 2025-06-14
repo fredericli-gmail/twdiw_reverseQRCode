@@ -1,0 +1,68 @@
+/* 驗證區塊樣式 */
+.validation-area {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.validation-result {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #dee2e6;
+}
+
+.validation-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    margin-top: 10px;
+}
+
+.status-icon {
+    font-size: 1.2em;
+}
+
+.status-text {
+    font-weight: 500;
+}
+
+/* 驗證狀態顏色 */
+.validation-status.valid {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.validation-status.invalid {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.validation-status.pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+/* 驗證按鈕樣式 */
+#verify-qr-code-btn {
+    margin-top: 20px;
+    background-color: #17a2b8;
+}
+
+#verify-qr-code-btn:hover {
+    background-color: #138496;
+}
+
+/* 驗證輸入框樣式 */
+#qr-code-input {
+    min-height: 100px;
+    font-family: monospace;
+}
+
+#rsa-private-key-verify {
+    min-height: 150px;
+    font-family: monospace;
+} 
