@@ -3,8 +3,8 @@
 ## 1. 概述
 
 本文件描述使用 Curve25519 橢圓曲線進行非對稱加密的實作規格。此加密方案結合了 ECDH（橢圓曲線迪菲-赫爾曼金鑰交換）和 AES 加密，提供安全的資料傳輸機制。
-程式碼請參考：
-https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/src/main/java/com/example/demo/service/ECCService.java
+
+[程式碼請參考](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/src/main/java/com/example/demo/service/ECCService.java)
 
 ## 2. 技術規格
 
