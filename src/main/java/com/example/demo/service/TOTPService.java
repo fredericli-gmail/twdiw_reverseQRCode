@@ -22,13 +22,23 @@ import java.util.Map;
  * 1. 產生 TOTP 金鑰
  * 2. 產生 TOTP 碼
  * 3. 驗證 TOTP 碼
+ * 
+ * 本服務實作 RFC 6238 標準，使用 HMAC-SHA256 演算法，
+ * 結合時間戳記和金鑰來產生一次性密碼。
+ * 
+ * 主要特點：
+ * - 使用 256 位元（32 位元組）的金鑰長度
+ * - 提供 6 位數的 TOTP 碼
+ * - 預設 60 秒的有效時間
+ * - 允許前後 30 秒的時間偏移
  */
 @Service
 public class TOTPService {
     
-    // TOTP 的有效時間為 60 秒
+    /** TOTP 的有效時間為 60 秒 */
     private static final int TOTP_PERIOD = 60;
-    // 時間偏移量為 30 秒，用於處理時間同步問題
+    
+    /** 時間偏移量為 30 秒，用於處理時間同步問題 */
     private static final int TIME_OFFSET = 30;
     
     /**
@@ -47,11 +57,11 @@ public class TOTPService {
             SecretKey secretKey = keyGenerator.generateKey();
             
             // 將金鑰轉換為 Base64 字串格式
-            String base32Key = Base64.getEncoder().encodeToString(secretKey.getEncoded());
+            String base64Key = Base64.getEncoder().encodeToString(secretKey.getEncoded());
             
             // 建立回傳結果
             Map<String, String> result = new HashMap<>();
-            result.put("totpKey", base32Key);
+            result.put("totpKey", base64Key);
             return result;
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("TOTP 金鑰產生失敗", e);

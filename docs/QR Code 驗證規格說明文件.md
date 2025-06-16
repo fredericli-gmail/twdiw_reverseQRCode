@@ -5,6 +5,10 @@
 本文件描述 QR Code 驗證的實作規格。用於驗證加密的 QR Code 內容，並回傳解密後的資訊。
 測試網站:https://demo.wallet.gov.tw/reverseqrcode/
 
+程式範例請參考:
+https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/aab7f3df7880ffe4461e3d0b24c5cf72561278f1/src/main/java/com/example/demo/controller/VerifyQRCodeController.java#L61
+
+
 ## 2. 執行此解密作業，所需要的資料
 
 ### 2.1 QRCode掃描後，取得的資料
@@ -41,8 +45,8 @@
 ### 3.2 解密流程
 1. 使用 ECC 解密
    - 使用提供的私鑰解密 encryptedData
-   - 解密過程遵循 ECC_Encryption_Specification.md 中的規格
    - 解密失敗時回傳適當的錯誤訊息
+   - 請參考 [ECC_Service_Specification.md 規格文件](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/docs/ECC_Service_Specification.md)
 
 2. 解析解密後的內容
    - 解析 JSON 格式的解密內容
@@ -54,11 +58,15 @@
    - 檢查解密內容中的時間戳記
    - 驗證時間戳記是否在有效期限內(QRCode有效60秒、時間偏移量30秒)
    - 過期的時間戳記視為無效
+   - 請參考 [TOTP_Service_Specification.md 規格文件](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/docs/TOTP_Service_Specification.md)
+  
 
 2. 內容完整性驗證
    - 檢查解密內容的完整性
    - 驗證所有必要欄位
    - 檢查資料格式是否符合預期
+   - 請參考 [HMAC_Service_Specification.md 規格文件](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/docs/HMAC_Service_Specification.md)
+
 
 ## 4. 安全性考量
 
@@ -73,9 +81,3 @@
 - 私鑰必須安全保管
 - 定期更換金鑰對
 - 使用安全的金鑰傳輸機制
-
-## 5. 實作範例
-
-### 5.1 Java 程式進入點
-
-待補
