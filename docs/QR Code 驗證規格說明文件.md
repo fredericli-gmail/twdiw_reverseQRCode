@@ -4,7 +4,7 @@
 
 本文件描述 QR Code 驗證的實作規格。用於驗證加密的 QR Code 內容，並回傳解密後的資訊。
 
-[測試網站]([https://www.openai.com](https://demo.wallet.gov.tw/reverseqrcode/))
+[測試網站](https://demo.wallet.gov.tw/reverseqrcode/)
 
 [程式範例請參考](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/aab7f3df7880ffe4461e3d0b24c5cf72561278f1/src/main/java/com/example/demo/controller/VerifyQRCodeController.java#L61)
 
