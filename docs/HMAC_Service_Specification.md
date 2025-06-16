@@ -4,8 +4,7 @@
 
 HMAC（Hash-based Message Authentication Code）服務提供了一個安全的方式來驗證訊息的真實性和完整性。本服務使用 HMAC-SHA256 演算法，結合了加密雜湊函數（SHA-256）和金鑰，以產生訊息驗證碼。
 
-程式碼請參考：
-https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/src/main/java/com/example/demo/service/HMACService.java
+[程式碼請參考](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/src/main/java/com/example/demo/service/HMACService.java)
 
 ### 1.1 主要功能
 - 產生 HMAC 金鑰
