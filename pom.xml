@@ -12,7 +12,7 @@
     
     <groupId>com.example</groupId>
     <artifactId>reverse-code</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>reverse-code</name>
     <description>QR Code 反向驗證系統 - 用於驗證 QR Code 內容的真實性和完整性</description>
     
