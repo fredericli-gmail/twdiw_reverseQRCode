@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 // 引入 Spring MVC 相關類別
+import com.example.demo.service.ECCService;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 
 // 引入服務層類別
-import com.example.demo.service.RSA2048Service;
 import com.example.demo.service.TOTPService;
 import com.example.demo.service.HMACService;
 
@@ -36,10 +36,6 @@ public class VerifyQRCodeController {
     // 設定日誌記錄器
     private static final Logger logger = LoggerFactory.getLogger(VerifyQRCodeController.class);
 
-    // 注入 RSA-2048 加密服務
-    @Autowired
-    private RSA2048Service rsa2048Service;
-
     // 注入 TOTP 服務
     @Autowired
     private TOTPService totpService;
@@ -47,6 +43,10 @@ public class VerifyQRCodeController {
     // 注入 HMAC 服務
     @Autowired
     private HMACService hmacService;
+
+    // 注入加解密服務
+    @Autowired
+    private ECCService eccService;
 
     // 建立 JSON 處理器
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -72,7 +72,7 @@ public class VerifyQRCodeController {
 
             // 1. 解密 DATA 欄位內容
             logger.info("開始解密 DATA 欄位內容");
-            String decryptedData = rsa2048Service.decrypt(request.getEncryptedData(), request.getPrivateKey());
+            String decryptedData = eccService.decrypt(request.getEncryptedData(), request.getPrivateKey());
             logger.info("解密完成，解密後的資料：{}", decryptedData);
             
             // 輸出解密後的明文到日誌

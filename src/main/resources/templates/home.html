@@ -35,7 +35,7 @@
             <div class="key-generator-buttons">
                 <button class="btn-generate">
                     <span class="btn-icon">🔑</span>
-                    <span class="btn-text">RSA2048 公私鑰自動產生</span>
+                    <span class="btn-text">Curve25519 橢圓曲線金鑰產生</span>
                 </button>
                 <button class="btn-generate">
                     <span class="btn-icon">⏱️</span>
@@ -47,11 +47,11 @@
                 </button>
             </div>
             <div class="form-group">
-                <label for="rsa-public-key">RSA 公鑰</label>
+                <label for="rsa-public-key">Curve25519 公鑰</label>
                 <textarea id="rsa-public-key"></textarea>
             </div>
             <div class="form-group">
-                <label for="rsa-private-key">RSA 私鑰</label>
+                <label for="rsa-private-key">Curve25519 私鑰</label>
                 <textarea id="rsa-private-key"></textarea>
             </div>
             <div class="form-group">
@@ -101,7 +101,7 @@
                     <div class="json-display-container">
                         <div class="json-display-header">
                             <span class="json-display-title">加密資料</span>
-                            <span class="json-display-description">使用 RSA 公鑰加密後的資料</span>
+                            <span class="json-display-description">加密後的資料</span>
                         </div>
                         <div id="json-display-encrypt" class="json-display"></div>
                     </div>
@@ -132,7 +132,7 @@
                         <div class="json-display-container">
                             <div class="json-display-header">
                                 <span class="json-display-title">解密資料</span>
-                                <span class="json-display-description">使用 RSA 私鑰解密後的資料</span>
+                                <span class="json-display-description">解密後的資料</span>
                             </div>
                             <div id="decrypted-data" class="json-display"></div>
                         </div>

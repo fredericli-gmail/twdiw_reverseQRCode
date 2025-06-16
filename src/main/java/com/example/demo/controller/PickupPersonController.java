@@ -1,16 +1,12 @@
 package com.example.demo.controller;
 
 // 引入 Spring 框架相關類別
+import com.example.demo.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 // 引入服務層類別
-import com.example.demo.service.PickupPersonService;
-import com.example.demo.service.TOTPService;
-import com.example.demo.service.HMACService;
-import com.example.demo.service.QRCodeService;
-import com.example.demo.service.RSA2048Service;
 
 // 引入 JSON 處理相關類別
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,14 +45,14 @@ public class PickupPersonController {
     @Autowired
     private HMACService hmacService;
     
-    // 注入 RSA-2048 加密服務
+    // 注入加解密服務
     @Autowired
-    private RSA2048Service rsa2048Service;
+    private ECCService eccService;
 
     // 注入 QR Code 服務
     @Autowired
     private QRCodeService qrCodeService;
-    
+
     /**
      * 產生取件人資料並進行加密
      * 
@@ -96,8 +92,8 @@ public class PickupPersonController {
             // 將明碼資料轉換為 JSON 字串
             String plainDataJson = objectMapper.writeValueAsString(plainData);
             
-            // 使用 RSA 公鑰加密資料
-            String encryptedData = rsa2048Service.encrypt(plainDataJson, rsaPublicKey);
+            // 使用 公鑰加密資料
+            String encryptedData = eccService.encrypt(plainDataJson, rsaPublicKey);
             
             // 準備加密後的資料結構
             Map<String, String> encryptedResult = new HashMap<>();

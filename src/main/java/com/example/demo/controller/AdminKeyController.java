@@ -1,12 +1,12 @@
 package com.example.demo.controller;
 
 // 引入 Spring 框架相關類別
+import com.example.demo.service.ECCService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 // 引入服務層類別
-import com.example.demo.service.RSA2048Service;
 import com.example.demo.service.TOTPService;
 import com.example.demo.service.HMACService;
 
@@ -25,9 +25,9 @@ import java.util.HashMap;
 @RequestMapping("/api/admin")
 public class AdminKeyController {
 
-    // 注入 RSA-2048 加密服務
+    // 注入加解密服務
     @Autowired
-    private RSA2048Service rsa2048Service;
+    private ECCService eccService;
 
     // 注入 TOTP 服務
     @Autowired
@@ -38,20 +38,20 @@ public class AdminKeyController {
     private HMACService hmacService;
 
     /**
-     * 產生 RSA 金鑰對
+     * 產生 金鑰對
      * 
      * @return 包含公鑰和私鑰的 Map，金鑰以 Base64 格式儲存
      */
     @PostMapping("/generate/rsa")
     public ResponseEntity<Map<String, String>> generateRSAKeys() {
         try {
-            // 產生 RSA 金鑰對
-            Map<String, String> keys = rsa2048Service.generateKeyPair();
+            // 產生 金鑰對
+            Map<String, String> keys = eccService.generateKeyPairMap();
             return ResponseEntity.ok(keys);
         } catch (Exception e) {
             // 處理錯誤情況
             Map<String, String> error = new HashMap<>();
-            error.put("error", "RSA 金鑰產生失敗：" + e.getMessage());
+            error.put("error", "金鑰產生失敗：" + e.getMessage());
             return ResponseEntity.badRequest().body(error);
         }
     }
