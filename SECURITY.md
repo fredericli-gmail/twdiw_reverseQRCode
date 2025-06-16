@@ -12,7 +12,7 @@
 
 如果您發現了安全性問題，請不要公開回報。相反地，請透過以下方式聯繫我們：
 
-1. 發送電子郵件至 [your.email@example.com](mailto:your.email@example.com)
+1. 發送電子郵件至 [frederic62.li@gmail.com](mailto:frederic62.li@gmail.com)
 2. 在 GitHub 上建立私密的 security advisory
 
 請在回報中包含以下資訊：
