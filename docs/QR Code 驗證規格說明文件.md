@@ -23,12 +23,14 @@
 
 ### 2.2 執行此解密作業，所需要的欄位
 
+> ⚠️ **重要訊息：** privateKey、totpKey與hmacKey的值，因本專案是範例參考，實際情況請自行保存在POS機或安全的位置。
+
 | 參數名稱 | 必填 | 說明 | 格式範例 |
 |---------|------|------|----------|
 | encryptedData | 是 | Base64 編碼的加密資料 | `"AxAucLubMlUyWhJAvCKZN..."` |
-| privateKey | 是 | Base64 編碼的私鑰(因為是範例，這個值請自行保存在POS機上) | `"MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0w..."` |
-| totpKey | 是 | TOTP 金鑰，用於時間同步驗證(因為是範例，這個值請自行保存在POS機上) | `"JBSWY3DPEHPK3PXP"` |
-| hmacKey | 是 | HMAC 金鑰，用於請求簽章驗證(因為是範例，這個值請自行保存在POS機上) | `"your-hmac-secret-key"` |
+| privateKey | 是 | Base64 編碼的私鑰(這個值請自行保存) | `"MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0w..."` |
+| totpKey | 是 | TOTP 金鑰，用於時間同步驗證(這個值請自行保存) | `"JBSWY3DPEHPK3PXP"` |
+| hmacKey | 是 | HMAC 金鑰，用於請求簽章驗證(這個值請自行保存) | `"your-hmac-secret-key"` |
 
 
 ## 3. 驗證流程
