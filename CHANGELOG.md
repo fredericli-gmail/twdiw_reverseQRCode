@@ -11,7 +11,6 @@
 - 更新加密方式從 RSA-2048 改為 ECC（Curve25519）
 - 新增深色/淺色主題支援
 - 新增響應式設計支援
-- 新增 Docker 和 Docker Compose 支援
 - 新增技術文件連結
 - 修正應用程式存取路徑（從 / 改為 /reverseqrcode）
 
