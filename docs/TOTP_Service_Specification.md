@@ -4,8 +4,7 @@
 
 TOTP（Time-based One-Time Password）服務提供了一個基於時間的一次性密碼驗證機制。本服務實作了 RFC 6238 標準，使用 HMAC-SHA256 演算法，結合時間戳記和金鑰來產生一次性密碼。
 
-程式碼請參考：
-https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/src/main/java/com/example/demo/service/TOTPService.java
+[程式碼請參考](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/src/main/java/com/example/demo/service/TOTPService.java)
 
 ### 1.1 主要功能
 - 產生 TOTP 一次性密碼
