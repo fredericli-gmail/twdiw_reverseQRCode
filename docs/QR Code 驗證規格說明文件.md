@@ -2,7 +2,7 @@
 
 ## 1. 概述
 
-本文件描述 QR Code 驗證的實作規格。用於驗證加密的 QR Code 內容，並回傳解密後的資訊。
+本文件描述在取得 QR Code 的資料後，要如何進行驗證。
 
 [測試網站](https://demo.wallet.gov.tw/reverseqrcode/)
 
