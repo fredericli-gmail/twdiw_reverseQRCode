@@ -39,7 +39,7 @@
 
 ## 執行
 
-可以透過 [your.email@example.com](mailto:your.email@example.com) 聯繫專案團隊來回報濫用、騷擾或其他不可接受的行為。
+可以透過 [frederic62.li@gmail.com](mailto:frederic62.li@gmail.com) 聯繫專案團隊來回報濫用、騷擾或其他不可接受的行為。
 
 所有投訴都將被審查和調查，並做出必要的回應。專案團隊有義務為事件回報者保密。
 
