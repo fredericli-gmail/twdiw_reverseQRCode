@@ -66,6 +66,7 @@
    - 檢查解密內容的完整性
    - 驗證所有必要欄位
    - 檢查資料格式是否符合預期
+   - HMac的記算是透過 TOTP與姓名進行綁定計算
    - 請參考 [HMAC_Service_Specification.md 規格文件](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/docs/HMAC_Service_Specification.md)
 
 
