@@ -5,7 +5,7 @@
 ## 功能特點
 
 - QR Code 產生與驗證
-- ECC（Curve25519）加密/解密
+- ECC（X25519）加密/解密
 - TOTP（基於時間的一次性密碼）驗證
 - HMAC 資料完整性驗證
 - 完整的 Web 介面
@@ -21,7 +21,7 @@
 - ZXing（QR Code 處理）
 - Bootstrap（前端框架）
 - JavaScript（前端互動）
-- BouncyCastle（加密函式庫）
+- Java 標準加密函式庫
 
 ## 系統需求
 
@@ -73,10 +73,11 @@ http://localhost:8080/reverseqrcode
 
 本系統採用多重安全機制：
 
-1. ECC（Curve25519）非對稱加密
-   - 使用 256 位元金鑰
+1. ECC（X25519）非對稱加密
+   - 使用 Curve25519 橢圓曲線
    - 提供 128 位元的安全性
-   - 使用壓縮格式的公鑰
+   - 使用 ChaCha20-Poly1305 進行對稱加密
+   - 使用 SHA-256 作為 KDF
 
 2. TOTP 時間驗證
    - 使用 HMAC-SHA256 演算法

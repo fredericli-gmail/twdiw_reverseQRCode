@@ -64,12 +64,12 @@ class ECCServiceTest {
 
         // 測試特殊字元
         String[] testCases = {
-            "Hello, 世界！",
-            "特殊字元：!@#$%^&*()_+",
-            "換行\n測試",
-            "Tab\t測試",
-            "中英文混合 Mixed Text 123",
-            "空白字元  測試"
+                "Hello, 世界！",
+                "特殊字元：!@#$%^&*()_+",
+                "換行\n測試",
+                "Tab\t測試",
+                "中英文混合 Mixed Text 123",
+                "空白字元  測試"
         };
 
         for (String testCase : testCases) {
@@ -102,4 +102,33 @@ class ECCServiceTest {
         // 驗證
         assertEquals(originalText, decrypted);
     }
-} 
+
+    @Test
+    void testEncryptAndDecryptWithPrint() throws Exception {
+        // 產生金鑰對
+        String[] keyPair = eccService.generateKeyPair();
+        String publicKey = keyPair[0];
+        String privateKey = keyPair[1];
+
+        System.out.println("公鑰：" + publicKey);
+        System.out.println("私鑰：" + privateKey);
+        System.out.println("----------------------------------------");
+
+        // 要加密的文字
+        String originalText = "{\"totp\":\"145351\",\"phone\":\"0963110951\",\"hmac\":\"HFCk/6P3JpIM0yx4H4EspuNdfSH3HzFGr8/UUxllJvc=\",\"name\":\"李長恩\"}\n";
+        System.out.println("原始文字：" + originalText);
+
+        // 加密
+        String encrypted = eccService.encrypt(originalText, publicKey);
+        System.out.println("加密後：" + encrypted);
+        System.out.println("加密後的長度:" + encrypted.length());
+        System.out.println("----------------------------------------");
+
+        // 解密
+        String decrypted = eccService.decrypt(encrypted, privateKey);
+        System.out.println("解密後：" + decrypted);
+
+        // 驗證
+        assertEquals(originalText, decrypted, "解密後的文字應該與原始文字相同");
+    }
+}
