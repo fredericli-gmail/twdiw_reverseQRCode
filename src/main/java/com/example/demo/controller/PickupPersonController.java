@@ -19,6 +19,12 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// 引入圖片處理相關類別
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import org.springframework.core.io.ClassPathResource;
+
 /**
  * 取件人資料控制器
  * 此控制器負責處理取件人資料的產生和加密，包含：
@@ -107,7 +113,29 @@ public class PickupPersonController {
 
             // 產生 QR Code
             String encryptedResultJson = objectMapper.writeValueAsString(encryptedResult);
-            result.put("qrCode", qrCodeService.generateQRCodeBase64(encryptedResultJson));
+            
+            // 註解掉標準 QR Code 生成
+            // result.put("qrCode", qrCodeService.generateQRCodeBase64(encryptedResultJson));
+            
+            // 使用 TWDIW logo 生成 QR Code
+            try {
+                // 讀取 TWDIW logo 圖片
+                ClassPathResource logoResource = new ClassPathResource("static/images/twdiw.png");
+                BufferedImage logoImage = ImageIO.read(logoResource.getInputStream());
+                
+                // 使用帶 logo 的 QR Code 生成方法
+                result.put("qrCode", qrCodeService.generateQRCodeWithLogoSpace(
+                    encryptedResultJson, 
+                    logoImage, 
+                    400,  // QR Code 尺寸
+                    400,  // QR Code 尺寸
+                    60    // Logo 尺寸
+                ));
+            } catch (IOException e) {
+                logger.error("讀取 TWDIW logo 失敗，使用標準 QR Code", e);
+                // 如果讀取 logo 失敗，回退到標準 QR Code
+                result.put("qrCode", qrCodeService.generateQRCodeBase64(encryptedResultJson));
+            }
             
             return ResponseEntity.ok(result);
             
