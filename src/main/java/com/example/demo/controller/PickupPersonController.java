@@ -85,26 +85,26 @@ public class PickupPersonController {
             // 產生 TOTP 碼
             String totp = totpService.generateTOTP(totpKey);
             
-            // 使用 TOTP 和姓名計算 HMAC 值
-            String hmac = hmacService.calculateHMAC(totp+name, hmacKey);
-            
-            // 準備明碼資料
+            // 準備明碼資料（不包含 HMAC）
             Map<String, String> plainData = new HashMap<>();
             plainData.put("phone", phone);
             plainData.put("name", name);
             plainData.put("totp", totp);
-            plainData.put("hmac", hmac);
             
             // 將明碼資料轉換為 JSON 字串
             String plainDataJson = objectMapper.writeValueAsString(plainData);
             
+            // 針對整個 JSON 資料計算 HMAC 值
+            String hmac = hmacService.calculateHMAC(plainDataJson, hmacKey);
+            
             // 使用 公鑰加密資料
             String encryptedData = eccService.encrypt(plainDataJson, rsaPublicKey);
             
-            // 準備加密後的資料結構
+            // 準備加密後的資料結構，包含 HMAC 欄位
             Map<String, String> encryptedResult = new HashMap<>();
             encryptedResult.put("T", "A");  // 設定資料類型
             encryptedResult.put("DATA", encryptedData);
+            encryptedResult.put("HMAC", hmac);  // 將 HMAC 值放在加密後的資料 JSON 中
             
             // 準備回傳資料
             Map<String, Object> result = new HashMap<>();
