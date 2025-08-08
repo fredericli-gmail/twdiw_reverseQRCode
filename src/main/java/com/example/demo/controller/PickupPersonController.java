@@ -108,10 +108,10 @@ public class PickupPersonController {
             
             // 準備加密後的資料結構，包含 HMAC 欄位和金鑰代碼
             Map<String, String> encryptedResult = new HashMap<>();
-            encryptedResult.put("T", "超商取貨");  // 設定資料類型
-            encryptedResult.put("D", encryptedData);
-            encryptedResult.put("H", hmac);  // 將 HMAC 值放在加密後的資料 JSON 中
-            encryptedResult.put("K", keyCode);  // 將金鑰代碼放在加密後的資料 JSON 中
+            encryptedResult.put("t", "超商取貨");  // 設定資料類型
+            encryptedResult.put("d", encryptedData);
+            encryptedResult.put("h", hmac);  // 將 HMAC 值放在加密後的資料 JSON 中
+            encryptedResult.put("k", keyCode);  // 將金鑰代碼放在加密後的資料 JSON 中
             
             // 準備回傳資料
             Map<String, Object> result = new HashMap<>();
