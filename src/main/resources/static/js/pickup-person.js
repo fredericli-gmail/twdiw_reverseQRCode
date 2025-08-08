@@ -39,6 +39,7 @@ async function handlePickupPersonData() {
     const totpKeyInput = document.getElementById('totp-key');
     const hmacKeyInput = document.getElementById('hmac-key');
     const rsaPublicKeyInput = document.getElementById('rsa-public-key');
+    const keyCodeInput = document.getElementById('key-code');
     
     // 檢查所有必要的元素是否存在
     if (!button || !phoneInput || !nameInput || !totpKeyInput || !hmacKeyInput || !rsaPublicKeyInput) {
@@ -79,7 +80,8 @@ async function handlePickupPersonData() {
             name: nameInput.value,
             totpKey: totpKeyInput.value,
             hmacKey: hmacKeyInput.value,
-            rsaPublicKey: rsaPublicKeyInput.value
+            rsaPublicKey: rsaPublicKeyInput.value,
+            keyCode: keyCodeInput ? keyCodeInput.value : 'default'
         };
         
         // 發送請求到後端

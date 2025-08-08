@@ -400,11 +400,12 @@ h1 {
     justify-content: center;
     align-items: center;
     min-height: 200px;
+    margin: 0 20px;  /* 兩邊留空白 */
 }
 
 .qrcode-display {
     width: 100%;
-    padding: clamp(15px, 3vw, 20px);
+    padding: clamp(20px, 4vw, 30px);  /* 增加內邊距 */
     background: var(--input-bg);
     border: 1px solid var(--glass-border);
     border-radius: 12px;
@@ -412,6 +413,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin: 0 10px;  /* 兩邊留空白 */
 }
 
 .qrcode-display img {
