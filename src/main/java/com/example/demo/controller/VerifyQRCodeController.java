@@ -84,17 +84,23 @@ public class VerifyQRCodeController {
                 // 嘗試解析為 JSON 格式
                 logger.info("嘗試解析 encryptedData 為 JSON...");
                 JsonNode encryptedDataNode = objectMapper.readTree(request.getEncryptedData());
-                logger.info("JSON 解析成功，檢查是否包含 DATA 和 HMAC 欄位");
+                logger.info("JSON 解析成功，檢查是否包含 D 和 H 欄位");
                 logger.info("JSON 欄位：{}", encryptedDataNode.fieldNames());
                 
-                if (encryptedDataNode.has("DATA") && encryptedDataNode.has("HMAC")) {
-                    // 新格式：從 JSON 中提取 DATA 和 HMAC
-                    encryptedData = encryptedDataNode.get("DATA").asText();
-                    expectedHmac = encryptedDataNode.get("HMAC").asText();
-                    logger.info("檢測到新格式資料，包含 DATA 和 HMAC 欄位");
+                if (encryptedDataNode.has("D") && encryptedDataNode.has("H")) {
+                    // 新格式：從 JSON 中提取 D 和 H
+                    encryptedData = encryptedDataNode.get("D").asText();
+                    expectedHmac = encryptedDataNode.get("H").asText();
+                    logger.info("檢測到新格式資料，包含 D 和 H 欄位");
+                    
+                    // 檢查是否有金鑰代碼欄位
+                    if (encryptedDataNode.has("K")) {
+                        String keyCode = encryptedDataNode.get("K").asText();
+                        logger.info("檢測到金鑰代碼：{}", keyCode);
+                    }
                 } else {
                     return ResponseEntity.ok(new VerifyQRCodeResponse(
-                        "加密資料格式錯誤：缺少 DATA 或 HMAC 欄位",
+                        "加密資料格式錯誤：缺少 D 或 H 欄位",
                         false,
                         null
                     ));
@@ -107,8 +113,8 @@ public class VerifyQRCodeController {
                 logger.warn("直接加密字符串格式，無法進行 HMAC 驗證");
             }
             
-            // 1. 解密 DATA 欄位內容
-            logger.info("開始解密 DATA 欄位內容");
+            // 1. 解密 D 欄位內容
+            logger.info("開始解密 D 欄位內容");
             String decryptedData = eccService.decrypt(encryptedData, request.getPrivateKey());
             logger.info("解密完成，解密後的資料：{}", decryptedData);
             

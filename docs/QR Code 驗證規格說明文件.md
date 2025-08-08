@@ -13,13 +13,20 @@
 ### 2.1 QRCode掃描後，取得的資料
 
 ```json
-{"T":"A","DATA":"AxAucLubMlUyWhJAvCKZNRun2DX9gVvr+tSOnrwuj6VofTXbF16CUBTrA55gApnwuhSp+tKc2+6WLqXT24zRsiXKhFUqtbQWtjaU6ZQkKTqdrEIIaOtVNtpTokhfd+CYEkljEjsOFUpdUCj3weAPlmLplq5wMQmUZqAx0XKIzZLJnmzie2T1hpte/GD9eQUAE155uJD5FFdmr8Mkoyo8ndo="}
+{
+  "T": "超商取貨",
+  "D": "AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl",
+  "H": "tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js=",
+  "K": "default"
+}
 ```
 
 | 參數名稱 | 必填 | 說明 | 格式範例 |
 |---------|------|------|----------|
-| T | 是 | A代表是超商領貨 | `"A"` |
-| DATA | 是 | 加密後的密文(encryptedData) | `"AxAucLubMlUyWhJAvCKZN..."` |
+| T | 是 | 交易類型，如"超商取貨" | `"超商取貨"` |
+| D | 是 | 加密後的密文(encryptedData) | `"AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl"` |
+| H | 是 | HMAC 訊息驗證碼 | `"tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js="` |
+| K | 是 | 金鑰識別符 | `"default"` |
 
 ### 2.2 執行此解密作業，所需要的欄位
 
@@ -27,10 +34,12 @@
 
 | 參數名稱 | 必填 | 說明 | 格式範例 |
 |---------|------|------|----------|
-| encryptedData | 是 | Base64 編碼的加密資料 | `"AxAucLubMlUyWhJAvCKZN..."` |
+| encryptedData | 是 | Base64 編碼的加密資料(來自QR Code的D欄位) | `"AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl"` |
+| hmacValue | 是 | HMAC 訊息驗證碼(來自QR Code的H欄位) | `"tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js="` |
+| keyIdentifier | 是 | 金鑰識別符(來自QR Code的K欄位) | `"default"` |
 | privateKey | 是 | Base64 編碼的私鑰(這個值請自行保存) | `"MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0w..."` |
 | totpKey | 是 | TOTP 金鑰，用於時間同步驗證(這個值請自行保存) | `"JBSWY3DPEHPK3PXP"` |
-| hmacKey | 是 | HMAC 金鑰，用於請求簽章驗證(這個值請自行保存) | `"your-hmac-secret-key"` |
+| hmacKey | 是 | HMAC 金鑰，用於訊息驗證碼驗證(這個值請自行保存) | `"your-hmac-secret-key"` |
 
 
 ## 3. 驗證流程
@@ -39,6 +48,8 @@
 
 1. 驗證請求參數
    - 檢查 encryptedData 是否為空值
+   - 檢查 hmacValue 是否為空值
+   - 檢查 keyIdentifier 是否為空值
    - 檢查 privateKey 是否為空值
    - 檢查 totpKey 是否為空值
    - 檢查 hmacKey 是否為空值
@@ -66,7 +77,7 @@
    - 檢查解密內容的完整性
    - 驗證所有必要欄位
    - 檢查資料格式是否符合預期
-   - HMac的計算是透過TOTP與姓名進行綁定計算
+   - 驗證 HMAC 訊息驗證碼是否正確
    - 請參考 [HMAC_Service_Specification.md 規格文件](https://github.com/fredericli-gmail/twdiw_reverseQRCode/blob/main/docs/HMAC_Service_Specification.md)
 
 

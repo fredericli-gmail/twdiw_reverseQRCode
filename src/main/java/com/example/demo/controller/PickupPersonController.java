@@ -74,12 +74,18 @@ public class PickupPersonController {
             String totpKey = request.get("totpKey");
             String hmacKey = request.get("hmacKey");
             String rsaPublicKey = request.get("rsaPublicKey");
+            String keyCode = request.get("keyCode");
             
             // 驗證所有必要參數是否存在
             if (phone == null || name == null || totpKey == null || hmacKey == null || rsaPublicKey == null) {
                 Map<String, Object> error = new HashMap<>();
                 error.put("error", "缺少必要參數");
                 return ResponseEntity.badRequest().body(error);
+            }
+            
+            // 如果沒有提供金鑰代碼，使用預設值
+            if (keyCode == null || keyCode.trim().isEmpty()) {
+                keyCode = "default";
             }
             
             // 產生 TOTP 碼
@@ -100,11 +106,12 @@ public class PickupPersonController {
             // 使用 公鑰加密資料
             String encryptedData = eccService.encrypt(plainDataJson, rsaPublicKey);
             
-            // 準備加密後的資料結構，包含 HMAC 欄位
+            // 準備加密後的資料結構，包含 HMAC 欄位和金鑰代碼
             Map<String, String> encryptedResult = new HashMap<>();
-            encryptedResult.put("T", "A");  // 設定資料類型
-            encryptedResult.put("DATA", encryptedData);
-            encryptedResult.put("HMAC", hmac);  // 將 HMAC 值放在加密後的資料 JSON 中
+            encryptedResult.put("T", "超商取貨");  // 設定資料類型
+            encryptedResult.put("D", encryptedData);
+            encryptedResult.put("H", hmac);  // 將 HMAC 值放在加密後的資料 JSON 中
+            encryptedResult.put("K", keyCode);  // 將金鑰代碼放在加密後的資料 JSON 中
             
             // 準備回傳資料
             Map<String, Object> result = new HashMap<>();

@@ -87,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // 檢查必要欄位
-            if (!qrCodeData.DATA) {
-                throw new Error('QR Code 內容缺少 DATA 欄位');
+            if (!qrCodeData.D) {
+                throw new Error('QR Code 內容缺少 D 欄位');
             }
 
             // 發送驗證請求到後端
