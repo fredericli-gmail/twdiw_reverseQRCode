@@ -69,19 +69,43 @@ public class TOTPService {
     }
     
     /**
-     * 產生 TOTP 碼
+     * 驗證 TOTP 碼是否有效
+     * 
+     * @param totpCode 要驗證的 TOTP 碼
+     * @param secretKey Base64 格式的 TOTP 金鑰
+     * @return 如果 TOTP 碼有效則回傳 true，否則回傳 false
+     */
+    public boolean verifyTOTP(String totpCode, String secretKey) {
+        try {
+            // 驗證前一個時間窗口、當前時間窗口和後一個時間窗口的 TOTP
+            for (int i = -1; i <= 1; i++) {
+                String currentTOTP = generateTOTP(secretKey, i);
+                // 比對是否相同
+                if (totpCode.equals(currentTOTP)) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 產生 TOTP 碼（支援時間偏移）
      * 
      * @param secretKey Base64 格式的 TOTP 金鑰
+     * @param timeOffset 時間偏移量（-1 為前一時間窗口，0 為當前時間窗口，+1 為後一時間窗口）
      * @return 6 位數的 TOTP 碼
      * @throws RuntimeException 當 TOTP 產生失敗時拋出
      */
-    public String generateTOTP(String secretKey) {
+    public String generateTOTP(String secretKey, int timeOffset) {
         try {
             // 取得當前時間戳記（秒）
             long currentTime = Instant.now().getEpochSecond();
             
             // 計算 TOTP 時間區間，加入時間偏移量
-            long timeStep = (currentTime + TIME_OFFSET) / TOTP_PERIOD;
+            long timeStep = (currentTime + TIME_OFFSET) / TOTP_PERIOD + timeOffset;
             
             // 將時間區間轉換為位元組陣列
             byte[] timeBytes = ByteBuffer.allocate(8).putLong(timeStep).array();
@@ -118,21 +142,13 @@ public class TOTPService {
     }
 
     /**
-     * 驗證 TOTP 碼是否有效
+     * 產生 TOTP 碼（當前時間窗口）
      * 
-     * @param totpCode 要驗證的 TOTP 碼
      * @param secretKey Base64 格式的 TOTP 金鑰
-     * @return 如果 TOTP 碼有效則回傳 true，否則回傳 false
+     * @return 6 位數的 TOTP 碼
+     * @throws RuntimeException 當 TOTP 產生失敗時拋出
      */
-    public boolean verifyTOTP(String totpCode, String secretKey) {
-        try {
-            // 取得當前時間的 TOTP 碼
-            String currentTOTP = generateTOTP(secretKey);
-            
-            // 直接比對是否相同
-            return totpCode.equals(currentTOTP);
-        } catch (Exception e) {
-            return false;
-        }
+    public String generateTOTP(String secretKey) {
+        return generateTOTP(secretKey, 0);
     }
 } 

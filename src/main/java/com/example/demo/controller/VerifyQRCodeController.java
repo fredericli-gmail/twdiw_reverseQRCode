@@ -22,6 +22,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.example.demo.service.TOTPService;
 import com.example.demo.service.HMACService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * QR Code 驗證控制器
  * 此控制器負責驗證 QR Code 的內容，包含：
@@ -60,6 +63,9 @@ public class VerifyQRCodeController {
     @PostMapping("/verify-qrcode")
     public ResponseEntity<?> verifyQRCode(@RequestBody VerifyQRCodeRequest request) {
         logger.info("開始驗證 QR Code");
+        logger.info("收到的 encryptedData 長度：{}", request.getEncryptedData() != null ? request.getEncryptedData().length() : "null");
+        logger.info("收到的 encryptedData 前100字元：{}", request.getEncryptedData() != null ? request.getEncryptedData().substring(0, Math.min(100, request.getEncryptedData().length())) : "null");
+        
         try {
             // 驗證請求參數是否完整
             if (!validateRequest(request)) {
@@ -70,26 +76,70 @@ public class VerifyQRCodeController {
                 ));
             }
 
+            // 檢查是否為 JSON 格式或直接是加密字符串
+            String encryptedData;
+            String expectedHmac = null;
+            
+            try {
+                // 嘗試解析為 JSON 格式
+                logger.info("嘗試解析 encryptedData 為 JSON...");
+                JsonNode encryptedDataNode = objectMapper.readTree(request.getEncryptedData());
+                logger.info("JSON 解析成功，檢查是否包含 DATA 和 HMAC 欄位");
+                logger.info("JSON 欄位：{}", encryptedDataNode.fieldNames());
+                
+                if (encryptedDataNode.has("DATA") && encryptedDataNode.has("HMAC")) {
+                    // 新格式：從 JSON 中提取 DATA 和 HMAC
+                    encryptedData = encryptedDataNode.get("DATA").asText();
+                    expectedHmac = encryptedDataNode.get("HMAC").asText();
+                    logger.info("檢測到新格式資料，包含 DATA 和 HMAC 欄位");
+                } else {
+                    return ResponseEntity.ok(new VerifyQRCodeResponse(
+                        "加密資料格式錯誤：缺少 DATA 或 HMAC 欄位",
+                        false,
+                        null
+                    ));
+                }
+            } catch (Exception e) {
+                // 如果不是 JSON 格式，假設是直接的加密字符串
+                logger.info("不是 JSON 格式，假設為直接的加密字符串");
+                encryptedData = request.getEncryptedData();
+                // 注意：這種情況下沒有 HMAC，需要從外部提供
+                logger.warn("直接加密字符串格式，無法進行 HMAC 驗證");
+            }
+            
             // 1. 解密 DATA 欄位內容
             logger.info("開始解密 DATA 欄位內容");
-            String decryptedData = eccService.decrypt(request.getEncryptedData(), request.getPrivateKey());
+            String decryptedData = eccService.decrypt(encryptedData, request.getPrivateKey());
             logger.info("解密完成，解密後的資料：{}", decryptedData);
+            
+            // 使用 ObjectMapper 來處理 JSON 字符串的 unescape
+            String unescapedData;
+            try {
+                // 先嘗試直接解析為 JSON 對象，然後轉回字符串來處理 unescape
+                JsonNode jsonNode = objectMapper.readTree(decryptedData);
+                unescapedData = objectMapper.writeValueAsString(jsonNode);
+                logger.info("使用 ObjectMapper 處理 unescape 後的資料：{}", unescapedData);
+            } catch (Exception e) {
+                // 如果解析失敗，使用原始數據
+                logger.warn("JSON 解析失敗，使用原始解密數據：{}", e.getMessage());
+                unescapedData = decryptedData;
+            }
             
             // 輸出解密後的明文到日誌
             logger.info("==========================================");
             logger.info("解密後的明文：");
-            logger.info(decryptedData);
+            logger.info(unescapedData);
             logger.info("==========================================");
             
             // 解析 JSON 資料
-            JsonNode dataNode = objectMapper.readTree(decryptedData);
+            JsonNode dataNode = objectMapper.readTree(unescapedData);
             logger.info("JSON 解析完成");
 
             // 2. 驗證必要欄位是否存在
             logger.info("開始驗證必要欄位");
             if (!validateRequiredFields(dataNode)) {
                 return ResponseEntity.ok(new VerifyQRCodeResponse(
-                    "解密失敗：缺少必要欄位 (totp, phone, hmac, name)",
+                    "解密失敗：缺少必要欄位 (totp, phone, name)",
                     false,
                     null
                 ));
@@ -99,7 +149,6 @@ public class VerifyQRCodeController {
             // 取得各欄位值
             String totp = dataNode.get("totp").asText();
             String phone = dataNode.get("phone").asText();
-            String hmac = dataNode.get("hmac").asText();
             String name = dataNode.get("name").asText();
             logger.info("取得欄位值：totp={}, phone={}, name={}", totp, phone, name);
 
@@ -115,28 +164,34 @@ public class VerifyQRCodeController {
             }
             logger.info("TOTP 驗證通過");
 
-            // 4. 驗證 HMAC 值
-            logger.info("開始驗證 HMAC");
-            String calculatedHmac = hmacService.calculateHMAC(totp + name, request.getHmacKey());
-            logger.info("計算出的 HMAC：{}", calculatedHmac);
-            logger.info("原始 HMAC：{}", hmac);
-            
-            if (!calculatedHmac.equals(hmac)) {
-                logger.error("HMAC 驗證失敗");
-                return ResponseEntity.ok(new VerifyQRCodeResponse(
-                    "HMAC 驗證失敗：資料完整性檢查失敗",
-                    false,
-                    null
-                ));
+            // 4. 驗證 HMAC 值（如果有提供）
+            if (expectedHmac != null) {
+                logger.info("開始驗證 HMAC");
+                // 直接使用解密後的明文進行 HMAC 驗證
+                String calculatedHmac = hmacService.calculateHMAC(unescapedData, request.getHmacKey());
+                logger.info("計算出的 HMAC：{}", calculatedHmac);
+                logger.info("原始 HMAC：{}", expectedHmac);
+                logger.info("用於計算 HMAC 的明文資料：{}", unescapedData);
+                
+                if (!calculatedHmac.equals(expectedHmac)) {
+                    logger.error("HMAC 驗證失敗");
+                    return ResponseEntity.ok(new VerifyQRCodeResponse(
+                        "HMAC 驗證失敗：資料完整性檢查失敗",
+                        false,
+                        null
+                    ));
+                }
+                logger.info("HMAC 驗證通過");
+            } else {
+                logger.info("跳過 HMAC 驗證（未提供 HMAC 值）");
             }
-            logger.info("HMAC 驗證通過");
 
             // 5. 所有驗證都通過，回傳解密後的資料
             logger.info("所有驗證都通過，準備回傳結果");
             return ResponseEntity.ok(new VerifyQRCodeResponse(
                 "驗證成功",
                 true,
-                decryptedData
+                unescapedData
             ));
 
         } catch (Exception e) {
@@ -151,7 +206,7 @@ public class VerifyQRCodeController {
     }
 
     /**
-     * 驗證請求參數是否完整
+     * 驗證請求參數是否完整（舊版本）
      * 
      * @param request 驗證請求物件
      * @return 如果所有必要參數都存在且不為空則回傳 true，否則回傳 false
@@ -174,16 +229,14 @@ public class VerifyQRCodeController {
         return dataNode != null &&
                dataNode.has("totp") &&
                dataNode.has("phone") &&
-               dataNode.has("hmac") &&
                dataNode.has("name") &&
                StringUtils.hasText(dataNode.get("totp").asText()) &&
                StringUtils.hasText(dataNode.get("phone").asText()) &&
-               StringUtils.hasText(dataNode.get("hmac").asText()) &&
                StringUtils.hasText(dataNode.get("name").asText());
     }
 
     /**
-     * QR Code 驗證請求物件
+     * QR Code 驗證請求物件（舊版本）
      * 用於接收前端傳來的驗證請求資料
      */
     public static class VerifyQRCodeRequest {
@@ -233,19 +286,19 @@ public class VerifyQRCodeController {
     public static class VerifyQRCodeResponse {
         private String message;    // 回應訊息
         private boolean isValid;   // 驗證是否通過
-        private String data;       // 解密後的資料
+        private String decryptedPlaintext;       // 解密後的明文
 
         /**
          * 建構子
          * 
          * @param message 回應訊息
          * @param isValid 驗證是否通過
-         * @param data 解密後的資料
+         * @param decryptedPlaintext 解密後的明文
          */
-        public VerifyQRCodeResponse(String message, boolean isValid, String data) {
+        public VerifyQRCodeResponse(String message, boolean isValid, String decryptedPlaintext) {
             this.message = message;
             this.isValid = isValid;
-            this.data = data;
+            this.decryptedPlaintext = decryptedPlaintext;
         }
 
         // Getters and Setters
@@ -265,12 +318,12 @@ public class VerifyQRCodeController {
             this.isValid = isValid;
         }
 
-        public String getData() {
-            return data;
+        public String getDecryptedPlaintext() {
+            return decryptedPlaintext;
         }
 
-        public void setData(String data) {
-            this.data = data;
+        public void setDecryptedPlaintext(String decryptedPlaintext) {
+            this.decryptedPlaintext = decryptedPlaintext;
         }
     }
 } 

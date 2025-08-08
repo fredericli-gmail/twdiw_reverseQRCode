@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    encryptedData: qrCodeData.DATA,
+                    encryptedData: JSON.stringify(qrCodeData), // 傳遞完整的 QR Code 數據
                     privateKey: keys.privateKey,
                     totpKey: keys.totpKey,
                     hmacKey: keys.hmacKey
@@ -108,9 +108,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
             console.log('後端回應：', result);
             
-            // 顯示解密後的資料
-            if (result.data) {
-                decryptedDataDisplay.textContent = formatJSON(result.data);
+            // 顯示解密後的明文
+            if (result.decryptedPlaintext) {
+                decryptedDataDisplay.textContent = result.decryptedPlaintext;
             }
             
             // 更新驗證狀態
@@ -123,9 +123,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>`;
                 
                 // 如果有資料，顯示詳細資訊
-                if (result.data) {
+                if (result.decryptedPlaintext) {
                     try {
-                        const data = JSON.parse(result.data);
+                        const data = JSON.parse(result.decryptedPlaintext);
                         resultHtml += `
                             <div class="card">
                                 <div class="card-body">
