@@ -66,8 +66,21 @@ http://localhost:8080/reverseqrcode
 2. 系統會進行以下驗證：
    - ECC 解密
    - TOTP 時間驗證
-   - HMAC 完整性驗證
+   - HMAC 訊息驗證碼驗證
+   - 資料完整性驗證
 3. 驗證結果會即時顯示在畫面上
+
+### QR Code 資料格式
+
+QR Code 包含以下 JSON 結構：
+```json
+{
+  "T": "超商取貨",
+  "D": "加密後的資料",
+  "H": "HMAC 訊息驗證碼",
+  "K": "金鑰識別符"
+}
+```
 
 ## 安全性說明
 
@@ -85,10 +98,11 @@ http://localhost:8080/reverseqrcode
    - 60 秒時間間隔
    - 允許 30 秒時間偏移
 
-3. HMAC 資料完整性驗證
+3. HMAC 訊息驗證碼驗證
    - 使用 SHA-256 雜湊演算法
    - 256 位元金鑰長度
    - Base64 編碼輸出
+   - 獨立訊息驗證機制
 
 4. 所有敏感資料都經過加密處理
 
@@ -119,8 +133,19 @@ src/
 - POST `/api/pickup-person/generate` - 產生 QR Code
 - POST `/api/verify-qrcode` - 驗證 QR Code
 
+### 驗證參數
+
+驗證 QR Code 時需要提供以下參數：
+- `encryptedData`: 來自 QR Code D 欄位的加密資料
+- `hmacValue`: 來自 QR Code H 欄位的 HMAC 訊息驗證碼
+- `keyIdentifier`: 來自 QR Code K 欄位的金鑰識別符
+- `privateKey`: 對應的私鑰
+- `totpKey`: TOTP 金鑰
+- `hmacKey`: HMAC 金鑰
+
 ### 技術文件
 
+- [QR Code 驗證規格說明文件](docs/QR%20Code%20驗證規格說明文件.md)
 - [ECC 服務規格](docs/ECC_Service_Specification.md)
 - [TOTP 服務規格](docs/TOTP_Service_Specification.md)
 - [HMAC 服務規格](docs/HMAC_Service_Specification.md)
