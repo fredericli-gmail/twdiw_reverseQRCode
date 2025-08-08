@@ -14,19 +14,19 @@
 
 ```json
 {
-  "T": "超商取貨",
-  "D": "AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl",
-  "H": "tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js=",
-  "K": "default"
+  "t": "超商取貨",
+  "d": "AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl",
+  "h": "tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js=",
+  "k": "default"
 }
 ```
 
 | 參數名稱 | 必填 | 說明 | 格式範例 |
 |---------|------|------|----------|
-| T | 是 | 交易類型，如"超商取貨" | `"超商取貨"` |
-| D | 是 | 加密後的密文(encryptedData) | `"AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl"` |
-| H | 是 | HMAC 訊息驗證碼 | `"tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js="` |
-| K | 是 | 金鑰識別符 | `"default"` |
+| t | 是 | 交易類型，可於驗證端後台自行設定，如"超商取貨" | `"超商取貨"` |
+| d | 是 | 加密後的密文(encryptedData) | `"AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl"` |
+| h | 是 | HMAC 訊息驗證碼 | `"tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js="` |
+| k | 是 | 金鑰代碼 | `"default"` |
 
 ### 2.2 執行此解密作業，所需要的欄位
 
@@ -34,9 +34,9 @@
 
 | 參數名稱 | 必填 | 說明 | 格式範例 |
 |---------|------|------|----------|
-| encryptedData | 是 | Base64 編碼的加密資料(來自QR Code的D欄位) | `"AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl"` |
-| hmacValue | 是 | HMAC 訊息驗證碼(來自QR Code的H欄位) | `"tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js="` |
-| keyIdentifier | 是 | 金鑰識別符(來自QR Code的K欄位) | `"default"` |
+| encryptedData | 是 | Base64 編碼的加密資料(來自QR Code的d欄位) | `"AAAALDAqMAUGAytlbgMhAGQmJAWzbjfvm2PV7TOhC4KEcNyfAwwaRpNozmn5qzUcKLqk0Nn9M/BZDLpfv2YuKLHlk2mxkQBeZf2mwKVe0B2V38BUsrraKfGYYx3rCBnJpKWoixSngGdCLM41CkrrT8dXavzkcaDTvkpAJ5tl"` |
+| hmacValue | 是 | HMAC 訊息驗證碼(來自QR Code的h欄位) | `"tdguyeOlJnjcsQedgoeP1kFZzKvuBl4oTwCJAlIx7js="` |
+| keyIdentifier | 是 | 金鑰代碼(來自QR Code的k欄位) | `"default"` |
 | privateKey | 是 | Base64 編碼的私鑰(這個值請自行保存) | `"MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0w..."` |
 | totpKey | 是 | TOTP 金鑰，用於時間同步驗證(這個值請自行保存) | `"JBSWY3DPEHPK3PXP"` |
 | hmacKey | 是 | HMAC 金鑰，用於訊息驗證碼驗證(這個值請自行保存) | `"your-hmac-secret-key"` |

@@ -84,23 +84,23 @@ public class VerifyQRCodeController {
                 // 嘗試解析為 JSON 格式
                 logger.info("嘗試解析 encryptedData 為 JSON...");
                 JsonNode encryptedDataNode = objectMapper.readTree(request.getEncryptedData());
-                logger.info("JSON 解析成功，檢查是否包含 D 和 H 欄位");
+                logger.info("JSON 解析成功，檢查是否包含 d 和 h 欄位");
                 logger.info("JSON 欄位：{}", encryptedDataNode.fieldNames());
                 
-                if (encryptedDataNode.has("D") && encryptedDataNode.has("H")) {
-                    // 新格式：從 JSON 中提取 D 和 H
-                    encryptedData = encryptedDataNode.get("D").asText();
-                    expectedHmac = encryptedDataNode.get("H").asText();
-                    logger.info("檢測到新格式資料，包含 D 和 H 欄位");
+                if (encryptedDataNode.has("d") && encryptedDataNode.has("h")) {
+                    // 新格式：從 JSON 中提取 d 和 h
+                    encryptedData = encryptedDataNode.get("d").asText();
+                    expectedHmac = encryptedDataNode.get("h").asText();
+                    logger.info("檢測到新格式資料，包含 d 和 h 欄位");
                     
                     // 檢查是否有金鑰代碼欄位
-                    if (encryptedDataNode.has("K")) {
-                        String keyCode = encryptedDataNode.get("K").asText();
+                    if (encryptedDataNode.has("k")) {
+                        String keyCode = encryptedDataNode.get("k").asText();
                         logger.info("檢測到金鑰代碼：{}", keyCode);
                     }
                 } else {
                     return ResponseEntity.ok(new VerifyQRCodeResponse(
-                        "加密資料格式錯誤：缺少 D 或 H 欄位",
+                        "加密資料格式錯誤：缺少 d 或 h 欄位",
                         false,
                         null
                     ));
