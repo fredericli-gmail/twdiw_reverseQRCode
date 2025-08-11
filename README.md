@@ -77,7 +77,7 @@ QR Code 包含以下 JSON 結構：
 {
   "t": "超商取貨",
   "d": "加密後的資料",
-  "h": "HMAC 訊息驗證碼",
+  "h": "d 欄位解密後內容的 HMAC 訊息驗證碼",
   "k": "金鑰識別符"
 }
 ```
@@ -137,7 +137,7 @@ src/
 
 驗證 QR Code 時需要提供以下參數：
 - `encryptedData`: 來自 QR Code d 欄位的加密資料
-- `hmacValue`: 來自 QR Code h 欄位的 HMAC 訊息驗證碼
+- `hmacValue`: 來自 QR Code h 欄位的 d 欄位解密後內容的 HMAC 訊息驗證碼
 - `keyIdentifier`: 來自 QR Code k 欄位的金鑰識別符
 - `privateKey`: 對應的私鑰
 - `totpKey`: TOTP 金鑰
