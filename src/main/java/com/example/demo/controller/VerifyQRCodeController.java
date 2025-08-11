@@ -174,10 +174,10 @@ public class VerifyQRCodeController {
             if (expectedHmac != null) {
                 logger.info("開始驗證 HMAC");
                 // 直接使用解密後的明文進行 HMAC 驗證
-                String calculatedHmac = hmacService.calculateHMAC(unescapedData, request.getHmacKey());
+                String calculatedHmac = hmacService.calculateHMAC(decryptedData, request.getHmacKey());
                 logger.info("計算出的 HMAC：{}", calculatedHmac);
                 logger.info("原始 HMAC：{}", expectedHmac);
-                logger.info("用於計算 HMAC 的明文資料：{}", unescapedData);
+                logger.info("用於計算 HMAC 的明文資料：{}", decryptedData);
                 
                 if (!calculatedHmac.equals(expectedHmac)) {
                     logger.error("HMAC 驗證失敗");
