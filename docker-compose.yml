@@ -1,0 +1,58 @@
+services:
+  # QR Code 反向驗證系統服務
+  reverseqrcode:
+    # 使用建置好的映像檔
+    image: twdiw-reverseqrcode:latest
+    
+    # 容器名稱
+    container_name: reverseqrcode
+    
+    # 埠映射
+    ports:
+      - "8094:8080"
+    
+    # 環境變數設定
+    environment:
+      # JVM 記憶體設定（針對 Linux x64 優化）
+      JAVA_OPTS: "-Xms256m -Xmx1g -XX:MaxMetaspaceSize=256m -XX:+UseG1GC"
+      # Spring Boot 設定
+      SPRING_PROFILES_ACTIVE: "prod"
+    
+    # 掛載目錄
+    volumes:
+      # 日誌目錄
+      - ./logs:/app/logs
+      # 設定檔（如需要外部設定）
+      # - ./config/application.yml:/app/config/application.yml
+      # 程式
+      - ./target/reverse-code-0.0.4-SNAPSHOT.jar:/app/app.jar
+    
+    # 重啟策略
+    restart: unless-stopped
+    
+    # 健康檢查
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/reverseqrcode"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # 資源限制（針對 Linux x64）
+    deploy:
+      resources:
+        limits:
+          # 最大使用 2GB 記憶體
+          memory: 2G
+          # 最大使用 4 個 CPU 核心
+          cpus: '4.0'
+        reservations:
+          # 保留 512MB 記憶體
+          memory: 512M
+          # 保留 1 個 CPU 核心
+          cpus: '1.0'
+
+# 網路設定（使用預設橋接網路）
+networks:
+  default:
+    driver: bridge
