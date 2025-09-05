@@ -141,22 +141,9 @@ public class VerifyQRCodeController {
             JsonNode dataNode = objectMapper.readTree(unescapedData);
             logger.info("JSON 解析完成");
 
-            // 2. 驗證必要欄位是否存在
-            logger.info("開始驗證必要欄位");
-            if (!validateRequiredFields(dataNode)) {
-                return ResponseEntity.ok(new VerifyQRCodeResponse(
-                    "解密失敗：缺少必要欄位 (totp, phone, name)",
-                    false,
-                    null
-                ));
-            }
-            logger.info("必要欄位驗證通過");
-
             // 取得各欄位值
             String totp = dataNode.get("totp").asText();
-            String phone = dataNode.get("phone").asText();
-            String name = dataNode.get("name").asText();
-            logger.info("取得欄位值：totp={}, phone={}, name={}", totp, phone, name);
+            logger.info("TOTP金鑰：{}", request.getTotpKey());
 
             // 3. 驗證 TOTP 碼
             logger.info("開始驗證 TOTP");
