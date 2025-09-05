@@ -90,7 +90,6 @@ public class PickupPersonController {
             
             // 產生 TOTP 碼
             String totp = totpService.generateTOTP(totpKey);
-            
             // 準備明碼資料（不包含 HMAC）
             Map<String, String> plainData = new HashMap<>();
             plainData.put("phone", phone);
@@ -108,7 +107,7 @@ public class PickupPersonController {
             
             // 準備加密後的資料結構，包含 HMAC 欄位和金鑰代碼
             Map<String, String> encryptedResult = new HashMap<>();
-            encryptedResult.put("t", "超商取貨");  // 設定資料類型
+            encryptedResult.put("t", "SS");  // 設定資料類型
             encryptedResult.put("d", encryptedData);
             encryptedResult.put("h", hmac);  // 將 HMAC 值放在加密後的資料 JSON 中
             encryptedResult.put("k", keyCode);  // 將金鑰代碼放在加密後的資料 JSON 中
