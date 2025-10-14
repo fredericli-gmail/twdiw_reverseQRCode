@@ -292,6 +292,6 @@ async function handlePickupPersonData() {
     } finally {
         // 恢復按鈕狀態
         button.disabled = false;
-        button.innerHTML = '<span class="btn-icon">👤</span><span class="btn-text">產生要給超商的資料</span>';
+        button.innerHTML = '<span class="btn-icon">👤</span><span class="btn-text">產生掃描的資料</span>';
     }
 }
