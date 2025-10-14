@@ -130,8 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">驗證結果</h5>
-                                    <p><strong>姓名：</strong>${data.name}</p>
-                                    <p><strong>電話：</strong>${data.phone}</p>
                                     <p><strong>驗證時間：</strong>${new Date().toLocaleString()}</p>
                                 </div>
                             </div>`;

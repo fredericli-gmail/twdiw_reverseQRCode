@@ -66,34 +66,76 @@ public class PickupPersonController {
      * @return 包含明碼資料、加密資料和 QR Code 的回應
      */
     @PostMapping("/generate")
-    public ResponseEntity<Map<String, Object>> generatePickupPersonData(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> generatePickupPersonData(@RequestBody Map<String, Object> request) {
         try {
-            // 從請求中取得必要參數
-            String phone = request.get("phone");
-            String name = request.get("name");
-            String totpKey = request.get("totpKey");
-            String hmacKey = request.get("hmacKey");
-            String rsaPublicKey = request.get("rsaPublicKey");
-            String keyCode = request.get("keyCode");
-            
+            // 從請求中取得金鑰參數
+            String totpKey = (String) request.get("totpKey");
+            String hmacKey = (String) request.get("hmacKey");
+            String rsaPublicKey = (String) request.get("rsaPublicKey");
+            String keyCode = (String) request.get("keyCode");
+
+            // 取得動態欄位資料
+            @SuppressWarnings("unchecked")
+            Map<String, String> dynamicFields = (Map<String, String>) request.get("dynamicFields");
+
             // 驗證所有必要參數是否存在
-            if (phone == null || name == null || totpKey == null || hmacKey == null || rsaPublicKey == null) {
+            if (totpKey == null || hmacKey == null || rsaPublicKey == null) {
                 Map<String, Object> error = new HashMap<>();
-                error.put("error", "缺少必要參數");
+                error.put("error", "缺少必要的金鑰參數");
                 return ResponseEntity.badRequest().body(error);
             }
-            
+
+            // 驗證動態欄位是否存在
+            if (dynamicFields == null || dynamicFields.isEmpty()) {
+                Map<String, Object> error = new HashMap<>();
+                error.put("error", "請至少提供一個欄位");
+                return ResponseEntity.badRequest().body(error);
+            }
+
+            // 驗證動態欄位的 Key 格式（只允許英數字和底線）
+            for (String key : dynamicFields.keySet()) {
+                // 檢查 Key 是否為空
+                if (key == null || key.trim().isEmpty()) {
+                    Map<String, Object> error = new HashMap<>();
+                    error.put("error", "欄位名稱不可為空");
+                    return ResponseEntity.badRequest().body(error);
+                }
+
+                // 檢查 Key 格式
+                if (!key.matches("^[a-zA-Z0-9_]+$")) {
+                    Map<String, Object> error = new HashMap<>();
+                    error.put("error", "欄位名稱「" + key + "」格式錯誤，只允許英文字母、數字和底線");
+                    return ResponseEntity.badRequest().body(error);
+                }
+
+                // 檢查 Value 是否為空
+                String value = dynamicFields.get(key);
+                if (value == null || value.trim().isEmpty()) {
+                    Map<String, Object> error = new HashMap<>();
+                    error.put("error", "欄位「" + key + "」的值不可為空");
+                    return ResponseEntity.badRequest().body(error);
+                }
+
+                // 檢查 Value 長度（防止過長）
+                if (value.length() > 500) {
+                    Map<String, Object> error = new HashMap<>();
+                    error.put("error", "欄位「" + key + "」的值過長（最多 500 字元）");
+                    return ResponseEntity.badRequest().body(error);
+                }
+            }
+
             // 如果沒有提供金鑰代碼，使用預設值
             if (keyCode == null || keyCode.trim().isEmpty()) {
                 keyCode = "default";
             }
-            
+
             // 產生 TOTP 碼
             String totp = totpService.generateTOTP(totpKey);
-            // 準備明碼資料（不包含 HMAC）
-            Map<String, String> plainData = new HashMap<>();
-            plainData.put("phone", phone);
-            plainData.put("name", name);
+
+            // 準備明碼資料（將動態欄位複製過來）
+            Map<String, String> plainData = new HashMap<>(dynamicFields);
+
+            // 加入 TOTP
             plainData.put("totp", totp);
             
             // 將明碼資料轉換為 JSON 字串

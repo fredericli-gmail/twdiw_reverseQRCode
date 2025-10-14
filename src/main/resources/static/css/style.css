@@ -570,4 +570,162 @@ h1 {
 .btn-generate:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+}
+
+/* ============================================
+   動態欄位相關樣式
+   ============================================ */
+
+/* 動態欄位群組容器 */
+#dynamic-fields-container {
+    margin-bottom: 20px;
+}
+
+/* 單一動態欄位群組 */
+.dynamic-field-group {
+    margin-bottom: 15px;
+    padding: 15px;
+    background: var(--input-bg);
+    border: 1px solid var(--input-border);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.dynamic-field-group:hover {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 動態欄位行（使用 flexbox 排版）*/
+.dynamic-field-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+/* 動態欄位 - Key 區塊 */
+.dynamic-field-key {
+    flex: 1;
+    min-width: 0;
+}
+
+/* 動態欄位 - Value 區塊 */
+.dynamic-field-value {
+    flex: 2;
+    min-width: 0;
+}
+
+/* 動態欄位 - 操作按鈕區塊 */
+.dynamic-field-actions {
+    flex-shrink: 0;
+}
+
+/* 動態欄位內的 label */
+.dynamic-field-key label,
+.dynamic-field-value label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* 動態欄位內的 input */
+.dynamic-field-key input,
+.dynamic-field-value input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background: var(--glass-bg);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+.dynamic-field-key input:focus,
+.dynamic-field-value input:focus {
+    outline: none;
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 3px var(--input-focus-shadow);
+}
+
+/* 新增欄位按鈕 */
+.btn-add-field {
+    background: linear-gradient(135deg, var(--primary-color), #0066CC);
+    color: #FFFFFF;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+}
+
+.btn-add-field:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+    background: linear-gradient(135deg, #0066CC, #0052A3);
+}
+
+.btn-add-field:active {
+    transform: translateY(0);
+}
+
+/* 刪除欄位按鈕 */
+.btn-remove-field {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--danger-color), #E02020);
+    color: #FFFFFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(255, 59, 48, 0.2);
+}
+
+.btn-remove-field:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.4);
+    background: linear-gradient(135deg, #E02020, #C01010);
+}
+
+.btn-remove-field:active {
+    transform: scale(0.95);
+}
+
+.btn-remove-field .btn-icon {
+    font-size: 1.2rem;
+}
+
+/* 響應式設計：手機版 */
+@media screen and (max-width: 768px) {
+    .dynamic-field-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .dynamic-field-key,
+    .dynamic-field-value {
+        width: 100%;
+    }
+
+    .dynamic-field-actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn-add-field {
+        width: 100%;
+        justify-content: center;
+    }
 } 
