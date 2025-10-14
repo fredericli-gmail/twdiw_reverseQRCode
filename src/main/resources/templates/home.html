@@ -71,14 +71,21 @@
         <!-- 領貨人資料模擬區 -->
         <section class="section">
             <h2 class="section-title">領貨人資料模擬區</h2>
-            <div class="form-group">
-                <label for="phone">手機號碼</label>
-                <input type="text" id="phone" placeholder="請輸入 3 位數或 10 位數手機號碼">
+
+            <!-- 動態欄位容器 -->
+            <div id="dynamic-fields-container">
+                <!-- 動態欄位會在這裡插入 -->
             </div>
+
+            <!-- 新增欄位按鈕 -->
             <div class="form-group">
-                <label for="name">姓名</label>
-                <input type="text" id="name" placeholder="請輸入姓名">
+                <button id="add-field-btn" class="btn-add-field" type="button">
+                    <span class="btn-icon">➕</span>
+                    <span class="btn-text">新增欄位</span>
+                </button>
             </div>
+
+            <!-- 產生按鈕 -->
             <button id="generate-pickup-person-btn" class="btn-calculate">
                 <span class="btn-icon">👤</span>
                 <span class="btn-text">產生要給超商的資料</span>
