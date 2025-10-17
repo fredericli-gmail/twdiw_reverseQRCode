@@ -73,6 +73,7 @@ public class PickupPersonController {
             String hmacKey = (String) request.get("hmacKey");
             String rsaPublicKey = (String) request.get("rsaPublicKey");
             String keyCode = (String) request.get("keyCode");
+            String dataType = (String) request.get("dataType");
 
             // 取得動態欄位資料
             @SuppressWarnings("unchecked")
@@ -90,6 +91,18 @@ public class PickupPersonController {
                 Map<String, Object> error = new HashMap<>();
                 error.put("error", "請至少提供一個欄位");
                 return ResponseEntity.badRequest().body(error);
+            }
+
+            // 驗證資料類型 t 值
+            if (dataType == null || dataType.trim().isEmpty()) {
+                dataType = "SS";
+            } else {
+                dataType = dataType.trim();
+                if (!dataType.matches("^[A-Za-z0-9_-]{1,32}$")) {
+                    Map<String, Object> error = new HashMap<>();
+                    error.put("error", "資料類型 (t) 只允許英數字、底線、連字號，長度 1-32 字元");
+                    return ResponseEntity.badRequest().body(error);
+                }
             }
 
             // 驗證動態欄位的 Key 格式（只允許英數字和底線）
@@ -149,7 +162,7 @@ public class PickupPersonController {
             
             // 準備加密後的資料結構，包含 HMAC 欄位和金鑰代碼
             Map<String, String> encryptedResult = new HashMap<>();
-            encryptedResult.put("t", "SS");  // 設定資料類型
+            encryptedResult.put("t", dataType);  // 使用自訂資料類型
             encryptedResult.put("d", encryptedData);
             encryptedResult.put("h", hmac);  // 將 HMAC 值放在加密後的資料 JSON 中
             encryptedResult.put("k", keyCode);  // 將金鑰代碼放在加密後的資料 JSON 中

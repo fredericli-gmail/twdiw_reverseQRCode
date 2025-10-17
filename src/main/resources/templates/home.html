@@ -72,6 +72,17 @@
         <section class="section">
             <h2 class="section-title">QRCode產生區</h2>
 
+            <div class="form-group">
+                <label for="data-type">資料類型 (t)</label>
+                <input type="text"
+                       id="data-type"
+                       value="SS"
+                       placeholder="例如：SS 或 CUSTOM_TYPE"
+                       maxlength="32"
+                       pattern="[A-Za-z0-9_-]+">
+                <small class="input-hint">只允許英數字、底線與連字號；預設為 SS</small>
+            </div>
+
             <!-- 動態欄位容器 -->
             <div id="dynamic-fields-container">
                 <!-- 動態欄位會在這裡插入 -->

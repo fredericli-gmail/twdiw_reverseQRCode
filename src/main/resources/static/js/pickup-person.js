@@ -193,6 +193,7 @@ async function handlePickupPersonData() {
     const hmacKeyInput = document.getElementById('hmac-key');
     const rsaPublicKeyInput = document.getElementById('rsa-public-key');
     const keyCodeInput = document.getElementById('key-code');
+    const dataTypeInput = document.getElementById('data-type');
 
     // 檢查所有必要的元素是否存在
     if (!button || !totpKeyInput || !hmacKeyInput || !rsaPublicKeyInput) {
@@ -227,6 +228,17 @@ async function handlePickupPersonData() {
             return;
         }
 
+        // 驗證資料類型 t 值
+        const dataType = dataTypeInput ? dataTypeInput.value.trim() : '';
+        if (!dataType) {
+            showNotification('請輸入資料類型 (t)', 'error');
+            return;
+        }
+        if (!/^[A-Za-z0-9_-]{1,32}$/.test(dataType)) {
+            showNotification('資料類型 (t) 只允許英數字、底線、連字號，長度 1-32 字元', 'error');
+            return;
+        }
+
         // 收集動態欄位資料
         const dynamicData = collectDynamicFieldsData();
 
@@ -236,7 +248,8 @@ async function handlePickupPersonData() {
             totpKey: totpKeyInput.value,
             hmacKey: hmacKeyInput.value,
             rsaPublicKey: rsaPublicKeyInput.value,
-            keyCode: keyCodeInput ? keyCodeInput.value : 'default'
+            keyCode: keyCodeInput ? keyCodeInput.value : 'default',
+            dataType: dataType
         };
 
         // 發送請求到後端
