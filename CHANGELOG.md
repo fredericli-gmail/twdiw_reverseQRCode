@@ -2,6 +2,17 @@
 
 本專案遵循 [語意化版本](https://semver.org/lang/zh-TW/) 進行版本控制。
 
+## [0.0.6-SNAPSHOT] - 2025-10-15
+
+### 新增
+- QR Code 產生頁面加入「資料類型 (t)」輸入欄位，可自訂 QR Payload 類型
+- 後端 `PickupPersonController` 支援自訂 `t` 值並進行格式驗證
+- 新增 `PickupPersonControllerTest` 覆蓋自訂 `t` 值流程
+
+### 變更
+- 更新前端 `pickup-person.js` 將 `t` 值帶入生成請求並加上基礎驗證
+- 將預設資料類型由程式碼常數改為表單可設定
+
 ## [0.0.5-SNAPSHOT] - 2025-10-14
 
 ### 新增
